@@ -13,16 +13,18 @@
             margin: 0;
             background-color: #ffeef2;
             font-family: sans-serif;
-            overflow: hidden; /* Evita que salgan barras de scroll si el botón huye */
+            overflow: hidden;
         }
         .contenedor { text-align: center; transition: 0.5s; }
         img { width: 200px; border-radius: 15px; }
         h1 { color: #d63384; }
         .botones { 
-            margin-top: 20px; 
+            margin-top: 30px; 
             display: flex; 
             justify-content: center; 
-            gap: 20px; 
+            align-items: center;
+            gap: 50px; /* Esto los mantiene separados al inicio */
+            height: 60px;
         }
         button {
             padding: 10px 25px;
@@ -33,12 +35,23 @@
             font-weight: bold;
             transition: 0.2s;
         }
-        #btnSi { background-color: #ff4d6d; color: white; position: relative; z-index: 100; }
-        #btnNo { background-color: #adb5bd; color: white; position: fixed; z-index: 1000; }
+        #btnSi { 
+            background-color: #ff4d6d; 
+            color: white; 
+            position: relative; 
+            z-index: 100; 
+        }
+        #btnNo { 
+            background-color: #adb5bd; 
+            color: white; 
+            position: relative; /* IMPORTANTE: relative para que no se encime al inicio */
+            z-index: 1000; 
+        }
         
         #mensaje-final { display: none; text-align: center; }
         #mensaje-final h2 { color: #d63384; font-size: 2rem; }
     </style>
+
 </head>
 <body>
 
@@ -58,57 +71,65 @@
     </div>
 
     <script>
-        const btnNo = document.getElementById('btnNo');
-        const btnSi = document.getElementById('btnSi');
-        const propuesta = document.getElementById('propuesta');
-        const mensajeFinal = document.getElementById('mensaje-final');
+        
+    const btnNo = document.getElementById('btnNo');
+    const btnSi = document.getElementById('btnSi');
+    const propuesta = document.getElementById('propuesta');
+    const mensajeFinal = document.getElementById('mensaje-final');
 
-        // Función para mover el botón a una posición visible segura
-        function moverBotonNo() {
-            // Dejamos un margen de 50px para que no se pegue al borde
-            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 50) + 25;
-            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 50) + 25;
-            
-            btnNo.style.left = x + 'px';
-            btnNo.style.top = y + 'px';
+    // Función para mover el botón a una posición visible segura
+    function moverBotonNo() {
+        // IMPORTANTE: Cambia a 'fixed' para que pueda saltar por toda la pantalla
+        btnNo.style.position = 'fixed'; 
+        
+        // Dejamos un margen de seguridad
+        const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 50) + 25;
+        const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 50) + 25;
+        
+        btnNo.style.left = x + 'px';
+        btnNo.style.top = y + 'px';
+    }
+
+    // Se mueve cuando el mouse se acerca
+    btnNo.addEventListener('mouseover', moverBotonNo);
+    // Se mueve si intentan tocarlo en celular
+    btnNo.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Evita que el celular haga "click" antes de moverlo
+        moverBotonNo();
+    });
+
+    btnSi.addEventListener('click', () => {
+        propuesta.style.display = 'none';
+        btnNo.style.display = 'none';
+        mensajeFinal.style.display = 'block';
+        lanzarCorazones();
+    });
+
+    function lanzarCorazones() {
+        for (let i = 0; i < 50; i++) {
+            const corazon = document.createElement('div');
+            corazon.innerText = '❤️';
+            corazon.style.position = 'fixed';
+            corazon.style.left = Math.random() * 100 + 'vw';
+            corazon.style.top = '-20px';
+            corazon.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            corazon.style.zIndex = '1000';
+            document.body.appendChild(corazon);
+
+            const duracion = Math.random() * 3 + 2;
+            corazon.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], {
+                duration: duracion * 1000,
+                easing: 'linear'
+            });
+
+            setTimeout(() => corazon.remove(), duracion * 1000);
         }
-
-        // Se mueve cuando el mouse se acerca
-        btnNo.addEventListener('mouseover', moverBotonNo);
-        // Se mueve si intentan tocarlo en celular
-        btnNo.addEventListener('touchstart', moverBotonNo);
-
-        btnSi.addEventListener('click', () => {
-            propuesta.style.display = 'none';
-            btnNo.style.display = 'none';
-            mensajeFinal.style.display = 'block';
-            lanzarCorazones();
-        });
-
-        function lanzarCorazones() {
-            for (let i = 0; i < 50; i++) {
-                const corazon = document.createElement('div');
-                corazon.innerText = '❤️';
-                corazon.style.position = 'fixed';
-                corazon.style.left = Math.random() * 100 + 'vw';
-                corazon.style.top = '-20px';
-                corazon.style.fontSize = (Math.random() * 20 + 20) + 'px';
-                corazon.style.zIndex = '1000';
-                document.body.appendChild(corazon);
-
-                const duracion = Math.random() * 3 + 2;
-                corazon.animate([
-                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                    { transform: `translateY(110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                ], {
-                    duration: duracion * 1000,
-                    easing: 'linear'
-                });
-
-                setTimeout(() => corazon.remove(), duracion * 1000);
-            }
-        }
+    }
     </script>
+
 </body>
 </html>
 
