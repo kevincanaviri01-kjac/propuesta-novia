@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuesta Especial ❤️</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffeef2;
+            font-family: sans-serif;
+            overflow: hidden; /* Evita que salgan barras de scroll si el botón huye */
+        }
+        .contenedor { text-align: center; transition: 0.5s; }
+        img { width: 200px; border-radius: 15px; }
+        h1 { color: #d63384; }
+        .botones { 
+            margin-top: 20px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        #btnSi { background-color: #ff4d6d; color: white; position: relative; z-index: 100; }
+        #btnNo { background-color: #adb5bd; color: white; position: fixed; z-index: 1000; }
+        
+        #mensaje-final { display: none; text-align: center; }
+        #mensaje-final h2 { color: #d63384; font-size: 2rem; }
+    </style>
+</head>
+<body>
+
+    <div id="propuesta" class="contenedor">
+        <img src="imgr1.png" alt="Amor">
+        <h1>¿Quieres ser mi novia? ❤️</h1>
+        <div class="botones">
+            <button id="btnSi">¡SÍ! 😍</button>
+            <button id="btnNo">No 🥺</button>
+        </div>
+    </div>
+
+    <div id="mensaje-final" class="contenedor">
+        <img src="imgr1.png" alt="Felicidad">
+        <h2>¡SABÍA QUE DIRÍAS QUE SÍ! ❤️</h2>
+        <p>Eres lo mejor de mi vida.</p>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('btnNo');
+        const btnSi = document.getElementById('btnSi');
+        const propuesta = document.getElementById('propuesta');
+        const mensajeFinal = document.getElementById('mensaje-final');
+
+        // Función para mover el botón a una posición visible segura
+        function moverBotonNo() {
+            // Dejamos un margen de 50px para que no se pegue al borde
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 50) + 25;
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 50) + 25;
+            
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+        }
+
+        // Se mueve cuando el mouse se acerca
+        btnNo.addEventListener('mouseover', moverBotonNo);
+        // Se mueve si intentan tocarlo en celular
+        btnNo.addEventListener('touchstart', moverBotonNo);
+
+        btnSi.addEventListener('click', () => {
+            propuesta.style.display = 'none';
+            btnNo.style.display = 'none';
+            mensajeFinal.style.display = 'block';
+            lanzarCorazones();
+        });
+
+        function lanzarCorazones() {
+            for (let i = 0; i < 50; i++) {
+                const corazon = document.createElement('div');
+                corazon.innerText = '❤️';
+                corazon.style.position = 'fixed';
+                corazon.style.left = Math.random() * 100 + 'vw';
+                corazon.style.top = '-20px';
+                corazon.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                corazon.style.zIndex = '1000';
+                document.body.appendChild(corazon);
+
+                const duracion = Math.random() * 3 + 2;
+                corazon.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: duracion * 1000,
+                    easing: 'linear'
+                });
+
+                setTimeout(() => corazon.remove(), duracion * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
+
